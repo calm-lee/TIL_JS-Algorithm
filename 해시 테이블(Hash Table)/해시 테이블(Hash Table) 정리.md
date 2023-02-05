@@ -1,4 +1,3 @@
-
 # Hash Table
 
 ### 해시 테이블이란?
@@ -56,3 +55,81 @@ function hash(key, arrayLen) {
   return total;
 }
 ```
+
+### 충돌 해결하기
+1. Separate Chaining (개별 체이닝)
+- 배열, linked list 등을 이용해서 개별 저장하는 방법
+- 배열을 사용하는 경우 사용은 쉽지만 중첩 배열 구조가 나온다.
+2. Linear Probing
+- 각 위치에 하나의 데이터만 저장하는 규칙을 그대로 지킨다.
+- 충돌이 발생하면 다음 빈 칸이 어디인지 확인해서 저장한다.
+
+### Set
+- key와 value를 받고 key를 해시 처리한 뒤, 개별 체이닝을 이용해 key-value 쌍을 넣는다.
+```javascript
+  set(key,value){
+    let index = this._hash(key);
+    if(!this.keyMap[index]){
+      this.keyMap[index] = [];
+    }
+    this.keyMap[index].push([key, value]);
+  }
+```
+### Get
+- key를 받고 해시 처리한 뒤, 해쉬 테이블에서 key- value쌍 출력
+- key가 없는 값이면 undefined 출력
+```javascript
+  get(key){
+    let index = this._hash(key);
+    if(this.keyMap[index]){
+      for(let i = 0; i < this.keyMap[index].length; i++){
+        if(this.keyMap[index][i][0] === key) {
+          return this.keyMap[index][i][1]
+        }
+      }
+    }
+    return undefined;
+  }
+```
+
+### keys
+배열에 있는 모든 key 출력하는 메소드
+```javascript
+  keys(){
+    let keysArr = [];
+    for(let i = 0; i < this.keyMap.length; i++){
+      if(this.keyMap[i]){
+        for(let j = 0; j < this.keyMap[i].length; j++){
+          if(!keysArr.includes(this.keyMap[i][j][0])){
+            keysArr.push(this.keyMap[i][j][0])
+          }
+        }
+      }
+    }
+    return keysArr;
+  }
+```
+
+### values
+배열에 있는 values 출력하는 메소드
+```javascript
+  values(){
+    let valuesArr = [];
+    for(let i = 0; i < this.keyMap.length; i++){
+      if(this.keyMap[i]){
+        for(let j = 0; j < this.keyMap[i].length; j++){
+          if(!valuesArr.includes(this.keyMap[i][j][1])){
+            valuesArr.push(this.keyMap[i][j][1])
+          }
+        }
+      }
+    }
+    return valuesArr;
+  }
+```
+
+### 빅오 복잡도
+- 평균적인 경우 상수값을 가진다.
+  - Insert: O(1)
+  - Deletion: O(1)
+  - Access: O(1)
